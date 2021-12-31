@@ -45,9 +45,27 @@ export type _Fill = {
   fgColor: string;
 };
 
+export type _BorderStyle =
+  | {
+      style?: string;
+      color?: string;
+    }
+  | '-';
 export type _Border = {
-  left: string;
-  right: string;
-  top: string;
-  bottom: string;
+  left: _BorderStyle;
+  right: _BorderStyle;
+  top: _BorderStyle;
+  bottom: _BorderStyle;
+};
+
+// TODO
+export type _Style = {
+  align: string;
+  valign: string;
+  rotate: string;
+  wrap: string;
+  font_id: number;
+  fill_id: number;
+  bder_id: number;
+  numfmt_id: number;
 };

@@ -1113,11 +1113,11 @@ class Style
       # if it's not in numberFormats, we parse the string and add it the end of numberFormats
       if !numfmt
         throw "Invalid format specification"
-#      numfmt = numfmt
-#        .replace(/&/g, '&amp')
-#        .replace(/</g, '&lt;')
-#        .replace(/>/g, '&gt;')
-#        .replace(/"/g, '&quot;')
+  #      numfmt = numfmt
+  #        .replace(/&/g, '&amp')
+  #        .replace(/</g, '&lt;')
+  #        .replace(/>/g, '&gt;')
+  #        .replace(/"/g, '&quot;')
       @numberFormats[++@numFmtNextId] = numfmt
       return @numFmtNextId
 
@@ -1362,9 +1362,9 @@ class Workbook
     @st = new Style(@)
     @cc = new CalcChain(@)
     @cc = new CalcChain(@)
-# @wsre = new XlSheetRels(@)
-# @dw = new XlDrawing(@)
-# @dwre = new XlDrawingRels(@)
+  # @wsre = new XlSheetRels(@)
+  # @dw = new XlDrawing(@)
+  # @dwre = new XlDrawingRels(@)
 
   createSheet: (name, cols, rows) ->
     sheet = new Sheet(@, name, cols, rows)
@@ -1372,7 +1372,7 @@ class Workbook
     return sheet
 
   _addMediaFromImage: (image) ->
-## converts image into proper media data structure
+  ## converts image into proper media data structure
     @medias.push({image: image})
 
   _removeMediaFromImage: (image) ->
@@ -1385,12 +1385,12 @@ class Workbook
     ## remove it if found.
     @medias.splice(foundIndex, 1) unless foundIndex > -1
 
-# _addDrawingFromImage: (image, media) ->
-##
-## @dwMediaRel = {}
-## @dwMediaRels.push(dwMediaRel)
-## @dw = {}
-## @dws.push(dw)
+  # _addDrawingFromImage: (image, media) ->
+  ##
+  ## @dwMediaRel = {}
+  ## @dwMediaRels.push(dwMediaRel)
+  ## @dw = {}
+  ## @dws.push(dw)
 
   save: (target, opts, cb) ->
     if (arguments.length == 1 && typeof target == 'function')
@@ -1413,7 +1413,7 @@ class Workbook
         fs.writeFile target, buffer, cb
       )
 
-# takes a callback function(err, zip) and returns a JSZip object on success
+  # takes a callback function(err, zip) and returns a JSZip object on success
   generate: (cb) =>
     zip = new JSZip()
 
@@ -1471,7 +1471,7 @@ class Workbook
     cb(null, zip)
 
   cancel: () ->
-# delete temp folder
+    # delete temp folder
     console.error "workbook.cancel() is deprecated"
 
 JSDateToExcel = (dt) ->
