@@ -653,11 +653,11 @@ class Sheet
     @_pageMargins= {left: '0.7', right: '0.7', top: '0.75', bottom: '0.75', header: '0.3', footer: '0.3'}
     @images = []
 
-# validates exclusivity between filling base64, filename, buffer properties.
-# validates extension is among supported types.
-# concurrency this is a critical path add semaphor, only one image can be added at the time.
-# there's a risk of adding image in parallel and returing diferent id between push and returning.
-# exceljs also contains same risk, despite of collecting id before.
+  # validates exclusivity between filling base64, filename, buffer properties.
+  # validates extension is among supported types.
+  # concurrency this is a critical path add semaphor, only one image can be added at the time.
+  # there's a risk of adding image in parallel and returing diferent id between push and returning.
+  # exceljs also contains same risk, despite of collecting id before.
   addImage: (image) ->
     if !image || !image.range || !image.base64 || !image.extension
       throw Error('please verify your image format')
@@ -946,14 +946,3 @@ class Sheet
 
     ws.end({pretty: false})
 
-# TODO: transforming
-class CalcChain
-  toxml: ()->
-    cc = xml.create('calcChain', {version: '1.0', encoding: 'UTF-8', standalone: true})
-    cc.att('xmlns', 'http://schemas.openxmlformats.org/spreadsheetml/2006/main')
-
-    for key, val of @cache
-      for el in val
-        cc.ele('c', {r: '' + el, i: '' + key})
-
-    return cc.end({pretty: false})
