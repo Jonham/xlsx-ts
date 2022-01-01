@@ -1,10 +1,13 @@
+// ####tool =
+// #  i2a : (i) ->
+// #    return 'ABCDEFGHIJKLMNOPQ###RSTUVWXYZ123'.charAt(i-1)
 export function i2a(column: number): string {
-  let temp: number
-  let letter: string = ''
+  let temp: number;
+  let letter: string = '';
   while (column > 0) {
-    temp = (column - 1) % 26
-    letter = String.fromCharCode(temp + 65) + letter
-    column = (column - temp - 1) / 26
+    temp = (column - 1) % 26;
+    letter = String.fromCharCode(temp + 65) + letter;
+    column = (column - temp - 1) / 26;
   }
-  return letter
+  return letter;
 }
