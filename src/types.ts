@@ -23,14 +23,17 @@ export type _wsRel = {
 export type TODO = unknown;
 
 export type FontDef = {
-  bold: string;
-  iter: string;
-  sz: string;
-  color: string;
   name: string;
+  /** font size */
+  sz: number | string;
+  bold: boolean | string;
+  /** italic */
+  iter: boolean | string;
+  underline: boolean | string;
+  /** text color */
+  color: string;
   scheme: string;
   family: string;
-  underline: string;
   strike: string;
   outline: string;
   shadow: string;

@@ -19,14 +19,37 @@ function test(): void {
 
       if (row === 1) {
         sheet.set(col, row, {
+          set: 'Red',
+          font: {
+            name: '宋体',
+            sz: 11,
+            color: 'FF0022FF',
+            bold: true,
+            iter: true,
+            underline: true,
+          },
+          align: 'center',
           fill: {
-            bgColor: '#ffff00',
-            fgColor: '#333333',
+            type: 'solid',
+            fgColor: 'FFFF2200',
           },
         });
       }
     }
   }
+
+  // To complete
+  // sheet.set([
+  //   null, // column 0 is ignored
+  //   null, // column 1 "A"
+  //   null, // column 2 "B"
+  //   [null, 'C1'], // column 3 "C"
+  // ]);
+  sheet.width(1, 30);
+  sheet.height(1, 20);
+
+  // sheet.colBreaks([15, 30, 45]);
+  // sheet.printBreakRows([15, 30, 45]);
 
   // console.log('A1', sheet.data[1][1]);
   workbook.save((err) => {

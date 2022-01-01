@@ -27,7 +27,12 @@ type PageSetup = {
 
 type Cell = any;
 
+export type CellValueType = string | number;
+
 export type CellContentSetter = {
+  /** cell content value */
+  set?: CellValueType;
+
   formula?: string;
   font?: Partial<FontDef>;
   fill?: Partial<Fill>;
@@ -251,7 +256,7 @@ export class Sheet {
   col_wd: ColWd[] = [];
   row_ht: number[] = [];
 
-  width(col: string, wd: number) {
+  width(col: number, wd: number) {
     return this.col_wd.push({ c: col, cw: wd });
   }
 
