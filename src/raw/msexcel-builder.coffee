@@ -591,8 +591,8 @@ class Anchor
   @property 'colWidth', {
     get: ->
       if @worksheet and @worksheet.width(@nativeCol, @nativeCol + 1) then
-#  and @worksheet.getColumn(@nativeCol + 1).isCustomWidth then
-# Math.floor(@worksheet.getColumn(@nativeCol + 1).width * 10000) else 640000
+      #  and @worksheet.getColumn(@nativeCol + 1).isCustomWidth then
+      # Math.floor(@worksheet.getColumn(@nativeCol + 1).width * 10000) else 640000
     enumerable: true
     configurable: true
   }
@@ -653,11 +653,11 @@ class Sheet
     @_pageMargins= {left: '0.7', right: '0.7', top: '0.75', bottom: '0.75', header: '0.3', footer: '0.3'}
     @images = []
 
-# validates exclusivity between filling base64, filename, buffer properties.
-# validates extension is among supported types.
-# concurrency this is a critical path add semaphor, only one image can be added at the time.
-# there's a risk of adding image in parallel and returing diferent id between push and returning.
-# exceljs also contains same risk, despite of collecting id before.
+  # validates exclusivity between filling base64, filename, buffer properties.
+  # validates extension is among supported types.
+  # concurrency this is a critical path add semaphor, only one image can be added at the time.
+  # there's a risk of adding image in parallel and returing diferent id between push and returning.
+  # exceljs also contains same risk, despite of collecting id before.
   addImage: (image) ->
     if !image || !image.range || !image.base64 || !image.extension
       throw Error('please verify your image format')
@@ -1113,11 +1113,11 @@ class Style
       # if it's not in numberFormats, we parse the string and add it the end of numberFormats
       if !numfmt
         throw "Invalid format specification"
-  #      numfmt = numfmt
-  #        .replace(/&/g, '&amp')
-  #        .replace(/</g, '&lt;')
-  #        .replace(/>/g, '&gt;')
-  #        .replace(/"/g, '&quot;')
+      #      numfmt = numfmt
+      #        .replace(/&/g, '&amp')
+      #        .replace(/</g, '&lt;')
+      #        .replace(/>/g, '&gt;')
+      #        .replace(/"/g, '&quot;')
       @numberFormats[++@numFmtNextId] = numfmt
       return @numFmtNextId
 

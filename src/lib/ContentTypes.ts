@@ -1,5 +1,4 @@
 import xmlbuilder from 'xmlbuilder';
-import { TODO } from '../types';
 import { Workbook } from '../workbook';
 
 export class ContentTypes {
@@ -9,10 +8,11 @@ export class ContentTypes {
     this.book = book;
   }
 
+  // ??
   _getKnowImageTypes() {
     const imagesToAdd = [];
     // debugger;
-    const imagesToAddDistinct: Record<string, TODO> = {};
+    const imagesToAddDistinct: Record<string, string> = {};
     for (const sheet of this.book.sheets) {
       for (const image of sheet.images) {
         if (!imagesToAddDistinct[image.extension]) {

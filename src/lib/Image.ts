@@ -1,38 +1,28 @@
 import xmlbuilder from 'xmlbuilder';
 import { TODO } from '../types';
 import { Sheet } from '../workbook/Sheet';
+import { AnchorRange } from './Anchor';
 
 type _options = TODO & { stretch: string };
-type _rangeModel = {
-  nativeCol: number;
-  nativeColOff: number;
-  nativeRow: number;
-  nativeRowOff: number;
-};
-export type _range = TODO & {
-  from: { model: _rangeModel };
-  to: { model: _rangeModel };
-  editAs?: 'oneCell' | string;
-};
+
 export class Image {
-  // TODO types
-  id: TODO;
+  id: number;
   // TODO
   extension: string;
-  content: TODO;
-  range: _range;
+  content: any;
+  range: AnchorRange;
   options: _options;
 
-  base64?: TODO;
+  base64: boolean = false; // ??
 
   editAs: string;
   contentType?: string;
 
   constructor(
-    id: TODO,
-    extension: TODO,
+    id: number,
+    extension: string,
     content: TODO,
-    range: _range,
+    range: AnchorRange,
     options: _options,
   ) {
     this.id = id;
@@ -45,19 +35,20 @@ export class Image {
   }
 
   // TODO
-  /**
-   *
-   * Inject image, it's used by sheet
-   * 1. write data to media folder
-   *   convert base 64 to text
-   *   define filename based on number of existing medias
-   *   writes to media
-   * 2. create reference for media to drawing
-   * 3. create the actual drawing using reference for media and set location
-   * 4. creates reference for drawing to sheet.
-   * 5. use image rel to sheet.
-   */
-  publish(sheet: Sheet, zip: TODO, media: TODO) {}
+  publish(sheet: Sheet, zip: unknown, media: unknown) {
+    /**
+     *
+     * Inject image, it's used by sheet
+     * 1. write data to media folder
+     *   convert base 64 to text
+     *   define filename based on number of existing medias
+     *   writes to media
+     * 2. create reference for media to drawing
+     * 3. create the actual drawing using reference for media and set location
+     * 4. creates reference for drawing to sheet.
+     * 5. use image rel to sheet.
+     */
+  }
 
   toDrawingXml(relId: string, spec: TODO): string {
     // pngVersionRel = 'rId1'

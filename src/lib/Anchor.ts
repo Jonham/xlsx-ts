@@ -1,18 +1,38 @@
-import { TODO } from '../types';
+import xmlbuilder from 'xmlbuilder';
+import { colCache } from '../util/colCache';
+import { Sheet } from '../workbook/Sheet';
+
+type AnchorModel = {
+  nativeCol: number;
+  nativeColOff: number;
+  nativeRow: number;
+  nativeRowOff: number;
+};
+export type Address = AnchorModel & {
+  // row: number;
+  // col: number;
+  sheetName?: string;
+  address: string;
+  col: number;
+  row: number;
+  $col$row: string;
+};
+
+export type AnchorRange = {
+  from: Anchor;
+  to: Anchor;
+  editAs?: 'oneCell' | string;
+};
 
 export class Anchor {
-  worksheet: TODO;
+  worksheet: Sheet;
 
   nativeCol = 0;
   nativeColOff = 0;
   nativeRow = 0;
   nativeRowOff = 0;
 
-  // TODO
-  // colWidth: number = 0
-  // rowHeight: number = 0
-
-  constructor(worksheet: TODO, address?: TODO, offset?: TODO = 0) {
+  constructor(worksheet: Sheet, address: string | Address, offset = 0) {
     this.worksheet = worksheet;
 
     if (!address) {
@@ -20,18 +40,18 @@ export class Anchor {
       this.nativeColOff = 0;
       this.nativeRow = 0;
       this.nativeRowOff = 0;
-    } else if (typeof address == 'string') {
+    } else if (typeof address === 'string') {
       const decoded = colCache.decodeAddress(address);
       this.nativeCol = decoded.col + offset;
       this.nativeColOff = 0;
       this.nativeRow = decoded.row + offset;
       this.nativeRowOff = 0;
-    } else if (address.nativeCol != undefined) {
+    } else if (address.nativeCol !== undefined) {
       this.nativeCol = address.nativeCol || 0;
       this.nativeColOff = address.nativeColOff || 0;
       this.nativeRow = address.nativeRow || 0;
       this.nativeRowOff = address.nativeRowOff || 0;
-    } else if (address.col != undefined) {
+    } else if (address.col !== undefined) {
       this.col = address.col + offset;
       this.row = address.row + offset;
     } else {
@@ -109,7 +129,7 @@ export class Anchor {
       nativeRowOff: this.nativeRowOff,
     };
   }
-  set model(value: TODO) {
+  set model(value: AnchorModel) {
     this.nativeCol = value.nativeCol;
     this.nativeColOff = value.nativeColOff;
     this.nativeRow = value.nativeRow;
@@ -119,12 +139,16 @@ export class Anchor {
   // enumerable: true
   // configurable: true
 
-  asInstance(model?: Anchor | null) {
-    return model instanceof Anchor || model == null ? model : new Anchor(model);
+  asInstance(model?: Anchor | Address) {
+    // return model instanceof Anchor || model == null ? model : new Anchor(model);
+    return model instanceof Anchor || model == null
+      ? model
+      : new Anchor(this.worksheet, model);
   }
 
-  toxml(xml: TODO) {
-    const wb = xml.create('workbook', {
+  // toxml(xml: TODO) {
+  toxml() {
+    const wb = xmlbuilder.create('workbook', {
       version: '1.0',
       encoding: 'UTF-8',
       standalone: true,

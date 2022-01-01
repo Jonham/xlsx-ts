@@ -1,5 +1,5 @@
 import xmlbuilder from 'xmlbuilder';
-import { Fill, _Font, _FONT_ID, _Border, _Style } from '../../types';
+import { Fill, FontDef, FontID, Border, StyleDef } from '../../types';
 import { Workbook } from '../../workbook';
 import { numberFormats } from './numberFormats';
 
@@ -9,11 +9,11 @@ export class Style {
   // TODO
   book: Workbook;
   // font.toString cache
-  cache: Record<string, _FONT_ID>;
-  mfonts: _Font[];
+  cache: Record<string, FontID>;
+  mfonts: FontDef[];
   mfills: Fill[];
-  mbders: _Border[];
-  mstyle: _Style[];
+  mbders: Border[];
+  mstyle: StyleDef[];
   numFmtNextId: number;
 
   def_font_id: number;
@@ -56,28 +56,9 @@ export class Style {
     });
   }
 
-  // private with_default() {
-  //   this.def_font_id = this.font2id();
-  //   this.def_fill_id = this.fill2id();
-  //   this.def_bder_id = this.bder2id();
-  //   this.def_align = '-';
-  //   this.def_valign = '-';
-  //   this.def_rotate = '-';
-  //   this.def_wrap = '-';
-  //   this.def_numfmt_id = 0;
-  //   this.def_style_id = this.style2id({
-  //     font_id: this.def_font_id,
-  //     fill_id: this.def_fill_id,
-  //     bder_id: this.def_bder_id,
-  //     align: this.def_align,
-  //     valign: this.def_valign,
-  //     rotate: this.def_rotate,
-  //   });
-  // }
-
-  font2id(font: Partial<_Font> = {}) {
+  font2id(_font: Partial<FontDef> = {}) {
     // Default
-    const defaultFont: Partial<_Font> = {
+    const font: FontDef = {
       bold: '-',
       iter: '-',
       sz: '11',
@@ -89,30 +70,30 @@ export class Style {
       strike: '-',
       outline: '-',
       shadow: '-',
-    };
-    font = {
-      ...defaultFont,
-      ...((font as any) || {}),
+
+      ..._font,
     };
 
-    const str =
-      'font_' +
-      font.bold +
-      font.iter +
-      font.sz +
-      font.color +
-      font.name +
-      font.scheme +
-      font.family +
-      font.underline +
-      font.strike +
-      font.outline +
-      font.shadow;
+    const strKeyOrder: (keyof FontDef)[] = [
+      'bold',
+      'iter',
+      'sz',
+      'color',
+      'name',
+      'scheme',
+      'family',
+      'underline',
+      'strike',
+      'outline',
+      'shadow',
+    ];
+
+    const str = 'font_' + strKeyOrder.map((k) => font[k]).join('');
     const id = this.cache[str];
     if (id) {
       return id;
     } else {
-      this.mfonts.push(font as _Font);
+      this.mfonts.push(font);
       this.cache[str] = this.mfonts.length;
       return this.mfonts.length;
     }
@@ -137,17 +118,13 @@ export class Style {
     }
   }
 
-  bder2id(border: Partial<_Border> = {}) {
-    const defaultBorder: _Border = {
+  bder2id(_border: Partial<Border> = {}) {
+    const border: Border = {
       left: '-',
       right: '-',
       top: '-',
       bottom: '-',
-    };
-
-    border = {
-      ...defaultBorder,
-      ...border,
+      ..._border,
     };
 
     const { left, right, top, bottom } = border;
@@ -157,16 +134,17 @@ export class Style {
     if (id) {
       return id;
     } else {
-      this.mbders.push(border as _Border);
+      this.mbders.push(border as Border);
       this.cache[str] = this.mbders.length;
       return this.mbders.length;
     }
   }
 
-  numfmt2id(numfmt: number | string) {
+  numfmt2id(numfmt: number | string): number {
     if (typeof numfmt == 'number') {
       return numfmt;
-    } else if (typeof numfmt == 'string') {
+    }
+    if (typeof numfmt == 'string') {
       if (!numfmt) {
         throw 'Invalid format specification';
       }
@@ -186,9 +164,10 @@ export class Style {
       this.numberFormats[++this.numFmtNextId] = numfmt;
       return this.numFmtNextId;
     }
+    return -1; // ??
   }
 
-  private parseStyleKey(style: _Style) {
+  private parseStyleKey(style: StyleDef) {
     const joint = [
       style.font_id,
       style.fill_id,
@@ -203,8 +182,8 @@ export class Style {
     return key;
   }
 
-  style2id(styleOpt: Partial<_Style> = {}) {
-    const style: _Style = {
+  style2id(styleOpt: Partial<StyleDef> = {}) {
+    const style: StyleDef = {
       align: this.def_align,
       valign: this.def_valign,
       rotate: this.def_rotate,
@@ -286,7 +265,7 @@ export class Style {
     const borders = ss.ele('borders', { count: this.mbders.length });
     for (const o of this.mbders) {
       const e = borders.ele('border');
-      const dirs: (keyof _Border)[] = ['left', 'right', 'top', 'bottom'];
+      const dirs: (keyof Border)[] = ['left', 'right', 'top', 'bottom'];
       dirs.forEach((borderDir) => {
         if (o[borderDir] !== '-') {
           if (typeof o.left === 'string') {

@@ -1,13 +1,18 @@
 import { addressRegex } from '../const/addressRegex';
+import { Address } from '../lib/Anchor';
 
 const AtoZ = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 /** letter A-Z */
 export type Letter = string;
-export type _Address = {
-  address: string;
-  col: number;
-  row: number;
-  $col$row: string;
+
+export type _Unknown = {
+  top: number;
+  left: number;
+  bottom: number;
+  right: number;
+  tl: string | Address;
+  br: string | Address;
+  dimensions: string;
 };
 
 /** Column Letter to Number conversion */
@@ -88,11 +93,12 @@ export const colCache = {
     if (!this._n2l[n]) this._fill(this._level(n));
     return this._n2l[n];
   },
-  _hash: {} as Record<string, _Address>,
+  _hash: {} as Record<string, Address>,
   validateAddress(value: string) {
     if (!addressRegex.test(value)) throw new Error('Invalid Address: ' + value);
     return true;
   },
+  // TODO ?? return type Address | number
   decodeAddress(value: string) {
     const addr = value.length < 5 && this._hash[value];
     if (addr) return addr;
@@ -136,9 +142,9 @@ export const colCache = {
     if (!hasRow) {
       rowNumber = undefined;
     }
-    //   // in case $row$col
+    // in case $row$col
     value = col + row;
-    const address: _Address = {
+    const address: Address = {
       address: value,
       col: colNumber as number, // TODO undefined
       row: rowNumber as number, // TODO undefined
@@ -164,7 +170,7 @@ export const colCache = {
     if (parts.length == 2) {
       const tl = this.decodeAddress(parts[0]);
       const br = this.decodeAddress(parts[1]);
-      const result = {
+      const result: _Unknown = {
         top: Math.min(tl.row, br.row),
         left: Math.min(tl.col, br.col),
         bottom: Math.max(tl.row, br.row),
@@ -181,55 +187,75 @@ export const colCache = {
     }
     return this.decodeAddress(value);
   },
-  // decodeEx: (value) ->
-  //   groups = value.match(/(?:(?:(?:'((?:[^']|'')*)')|([^'^ !]*))!)?(.*)/)
-  //   sheetName = groups[1] or groups[2]
-  //   # Qouted and unqouted groups
-  //   reference = groups[3]
-  //   # Remaining address
-  //   parts = reference.split(':')
-  //   if parts.length > 1
-  //     tl = @decodeAddress(parts[0])
-  //     br = @decodeAddress(parts[1])
-  //     top = Math.min(tl.row, br.row)
-  //     left = Math.min(tl.col, br.col)
-  //     bottom = Math.max(tl.row, br.row)
-  //     right = Math.max(tl.col, br.col)
-  //     tl = @n2l(left) + top
-  //     br = @n2l(right) + bottom
-  //     return {
-  //       top: top
-  //       left: left
-  //       bottom: bottom
-  //       right: right
-  //       sheetName: sheetName
-  //       tl:
-  //         address: tl
-  //         col: left
-  //         row: top
-  //         $col$row: '$' + @n2l(left) + '$' + top
-  //         sheetName: sheetName
-  //       br:
-  //         address: br
-  //         col: right
-  //         row: bottom
-  //         $col$row: '$' + @n2l(right) + '$' + bottom
-  //         sheetName: sheetName
-  //       dimensions: tl + ':' + br
-  //     }
-  //   if reference.startsWith('#')
-  //     return if sheetName then {
-  //       sheetName: sheetName,
-  //       error: reference
-  //     } else {error: reference}
-  //   address = @decodeAddress(reference)
-  //   if sheetName then {
-  //     sheetName: sheetName,
-  //     address: address.address,
-  //     col: address.col,
-  //     row: address.row,
-  //     $col$row: '$' + col + '$' + row
-  //   } else address
+  decodeEx(value: string) {
+    const groups = value.match(/(?:(?:(?:'((?:[^']|'')*)')|([^'^ !]*))!)?(.*)/);
+    const sheetName = groups![1] || groups![2];
+    // Qouted and unqouted groups
+    const reference = groups![3];
+
+    // Remaining address
+    const parts = reference.split(':');
+    if (parts.length > 1) {
+      let tl = this.decodeAddress(parts[0]); // ??
+      let br = this.decodeAddress(parts[1]); // ??
+
+      const top = Math.min(tl.row, br.row);
+      const left = Math.min(tl.col, br.col);
+      const bottom = Math.max(tl.row, br.row);
+      const right = Math.max(tl.col, br.col);
+
+      const tl1 = this.n2l(left) + top;
+      const br1 = this.n2l(right) + bottom;
+      return {
+        top: top,
+        left: left,
+        bottom: bottom,
+        right: right,
+        sheetName: sheetName,
+        tl: {
+          address: tl1,
+          col: left,
+          row: top,
+          $col$row: '$' + this.n2l(left) + '$' + top,
+          sheetName: sheetName,
+        },
+        br: {
+          address: br1,
+          col: right,
+          row: bottom,
+          $col$row: '$' + this.n2l(right) + '$' + bottom,
+          sheetName: sheetName,
+        },
+        dimensions: tl + ':' + br,
+      } as _Unknown;
+    }
+
+    if (reference.startsWith('#')) {
+      if (sheetName) {
+        return {
+          sheetName: sheetName,
+          error: reference,
+        };
+      } else {
+        return {
+          error: reference,
+        };
+      }
+    }
+    const address = this.decodeAddress(reference);
+    if (sheetName) {
+      return {
+        sheetName: sheetName,
+        address: address.address,
+        col: address.col,
+        row: address.row,
+        // $col$row: '$' + col + '$' + row,
+        $col$row: '$' + address.col + '$' + address.row,
+      } as Address;
+    } else {
+      return address;
+    }
+  },
   encodeAddress(row: number, col: number) {
     return colCache.n2l(col) + row;
   },
@@ -253,13 +279,7 @@ export const colCache = {
     address: [number, number],
   ): boolean {
     const [left, top, right, bottom] = range;
-    // const left = range[0]
-    // const top = range[1]
-    // const right = range[range.length - 2]
-    // const bottom = range[range.length - 1]
-    // const [left, top, , right, bottom] = range;
     const [col, row] = address;
-    // row = address[1]
     return col >= left && col <= right && row >= top && row <= bottom;
   },
 };

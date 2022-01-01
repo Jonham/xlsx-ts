@@ -28,4 +28,4 @@ export const numberFormats = {
   48: '##0.0E+0',
   49: '@',
   56: '"上午/下午 "hh"時"mm"分"ss"秒 "',
-}
+};

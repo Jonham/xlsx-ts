@@ -6,7 +6,7 @@ export type _Image = MediaImage & {
   content: any;
   toDrawingXml: (relId: string, image: _Image) => any;
 };
-export type _Media = {
+export type Media = {
   image: Image;
 };
 
@@ -22,7 +22,7 @@ export type _wsRel = {
 
 export type TODO = unknown;
 
-export type _Font = {
+export type FontDef = {
   bold: string;
   iter: string;
   sz: string;
@@ -36,7 +36,7 @@ export type _Font = {
   shadow: string;
 };
 
-export type _FONT_ID = number;
+export type FontID = number;
 
 export type Fill = {
   /** 'none' */
@@ -47,21 +47,20 @@ export type Fill = {
   fgColor: string;
 };
 
-export type _BorderStyle =
+export type BorderStyle =
   | {
       style?: string;
       color?: string;
     }
   | '-';
-export type _Border = {
-  left: _BorderStyle;
-  right: _BorderStyle;
-  top: _BorderStyle;
-  bottom: _BorderStyle;
+export type Border = {
+  left: BorderStyle;
+  right: BorderStyle;
+  top: BorderStyle;
+  bottom: BorderStyle;
 };
 
-// TODO
-export type _Style = {
+export type StyleDef = {
   align: string;
   valign: string;
   rotate: string;
