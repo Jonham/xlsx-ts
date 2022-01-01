@@ -17,7 +17,8 @@ export type _range = TODO & {
 export class Image {
   // TODO types
   id: TODO;
-  extension: TODO;
+  // TODO
+  extension: string;
   content: TODO;
   range: _range;
   options: _options;
@@ -25,6 +26,7 @@ export class Image {
   base64?: TODO;
 
   editAs: string;
+  contentType?: string;
 
   constructor(
     id: TODO,
