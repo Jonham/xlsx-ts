@@ -362,26 +362,3 @@ class ContentTypes
     })
 
     return types.end({pretty: false})
-
-class DocPropsApp
-  constructor: (@book)->
-
-  toxml: ()->
-    props = xml.create('Properties', {version: '1.0', encoding: 'UTF-8', standalone: true})
-    props.att('xmlns', 'http://schemas.openxmlformats.org/officeDocument/2006/extended-properties')
-    props.att('xmlns:vt', 'http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes')
-    props.ele('Application', 'Microsoft Excel')
-    props.ele('DocSecurity', '0')
-    props.ele('ScaleCrop', 'false')
-    tmp = props.ele('HeadingPairs').ele('vt:vector', {size: 2, baseType: 'variant'})
-    tmp.ele('vt:variant').ele('vt:lpstr', 'Worksheets')
-    tmp.ele('vt:variant').ele('vt:i4', '' + @book.sheets.length)
-    tmp = props.ele('TitlesOfParts').ele('vt:vector', {size: @book.sheets.length, baseType: 'lpstr'})
-    for i in [1..@book.sheets.length]
-      tmp.ele('vt:lpstr', @book.sheets[i - 1].name)
-    props.ele('Company')
-    props.ele('LinksUpToDate', 'false')
-    props.ele('SharedDoc', 'false')
-    props.ele('HyperlinksChanged', 'false')
-    props.ele('AppVersion', '12.0000')
-    return props.end({pretty: false})
