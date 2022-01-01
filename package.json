@@ -1,6 +1,6 @@
 {
   "name": "xlsx-ts",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "dist/xlsx-ts.cjs.js",
   "esModule": "dist/xlsx-ts.esm.js",
   "browser": "dist/xlsx-ts.umd.js",
