@@ -254,6 +254,7 @@ export class Style {
     fills.ele('fill').ele('patternFill', { patternType: 'none' });
     fills.ele('fill').ele('patternFill', { patternType: 'gray125' });
     //<fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill>
+
     for (const o of this.mfills) {
       const e = fills.ele('fill');
       const es = e.ele('patternFill', { patternType: o.type });

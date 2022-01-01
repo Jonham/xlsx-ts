@@ -8,7 +8,7 @@ type AnchorModel = {
   nativeRow: number;
   nativeRowOff: number;
 };
-export type Address = AnchorModel & {
+export type Address = Partial<AnchorModel> & {
   // row: number;
   // col: number;
   sheetName?: string;

@@ -1,7 +1,7 @@
 import { Workbook } from './workbook';
 
-const excelbuilder = {
+const xlsx = {
   createWorkbook: (fpath: string, fname: string) => new Workbook(fpath, fname),
 };
 
-export default excelbuilder;
+export { xlsx, Workbook };

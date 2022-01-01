@@ -26,6 +26,19 @@ type PageSetup = {
 };
 
 type Cell = any;
+
+export type CellContentSetter = {
+  formula?: string;
+  font?: Partial<FontDef>;
+  fill?: Partial<Fill>;
+  border?: Partial<Border>;
+  numberFormat?: any;
+  align?: any;
+  valign?: any;
+  rotate?: any;
+  wrap?: any;
+};
+
 export type CellMerge = {
   from: Cell;
   to: Cell;
@@ -68,6 +81,9 @@ export class Sheet {
   // TODO
   autofilter?: string;
 
+  colCount: number = 0; // ??
+  rowCount: number = 0; // ??
+
   _repeatRows?: {
     start: number;
     end: number;
@@ -85,6 +101,9 @@ export class Sheet {
   ) {
     this.book = book;
     this.name = name;
+    this.colCount = colCount;
+    this.rowCount = rowCount;
+
     this.data = {};
     for (let i = 1; i <= rowCount; i++) {
       this.data[i] = [];
@@ -132,10 +151,12 @@ export class Sheet {
       this.range,
       image.options || {},
     );
-    const media = this.book._addMediaFromImage(imageToAdd);
+
+    // const media =
+    this.book._addMediaFromImage(imageToAdd);
     // const drawingId = this.book._addDrawingFromImage(imageToAdd)
     // wsDwRelId = this.sheet._addDrawingFromImage(imageToAdd)
-    console.log(imageToAdd);
+    console.log('imageToAdd', imageToAdd);
     this.images.push(imageToAdd);
 
     return id;
@@ -166,8 +187,8 @@ export class Sheet {
       return image && image.imageId
   */
 
-  set(col: any): void;
-  set(col: number, row: number, str: any): void;
+  set(col: CellContentSetter): void;
+  set(col: number, row: number, str: CellContentSetter | string | number): void;
   set(...args: any[]): void {
     const [col, row, str] = args;
     // TODO
@@ -193,14 +214,14 @@ export class Sheet {
         // @ts-ignore
         this[key](col, row, value);
       }
-    } else if (typeof str == 'string') {
+    } else if (typeof str === 'string') {
       // if (str != null && str !== '') {} // ??
       if (str !== '') {
         this.data[row][col].v = this.book.sharedStrings.str2id('' + str);
       }
       this.data[row][col].dataType = 'string'; // ?? return
       return;
-    } else if (typeof str == 'number') {
+    } else if (typeof str === 'number') {
       this.data[row][col].v = str;
       this.data[row][col].dataType = 'number'; // ?? return
       return;
@@ -250,9 +271,9 @@ export class Sheet {
       this.book.style.font2id(font_s));
   }
 
-  fill(col: number, row: number, fill_s: Partial<Fill>) {
-    return (this.styles['fill_' + col + '_' + row] =
-      this.book.style.fill2id(fill_s));
+  fill(col: number, row: number, fill_style: Partial<Fill>) {
+    const key = 'fill_' + col + '_' + row;
+    return (this.styles[key] = this.book.style.fill2id(fill_style));
   }
 
   border(col: number, row: number, bder_s: Partial<Border>) {
@@ -387,12 +408,8 @@ export class Sheet {
     return id;
   }
 
-  // TODO
-  cols: number = 0; // ??
-  rows: number = 0; // ??
-
   getRange() {
-    return '$A$1:$' + i2a(this.cols) + '$' + this.rows;
+    return '$A$1:$' + i2a(this.colCount) + '$' + this.rowCount;
   }
 
   // TODO
@@ -438,15 +455,15 @@ export class Sheet {
     }
 
     const sd = ws.ele('sheetData');
-    for (let i = 1; i <= this.rows; i++) {
-      const r = sd.ele('row', { r: '' + i, spans: '1:' + this.cols });
+    for (let i = 1; i <= this.rowCount; i++) {
+      const r = sd.ele('row', { r: '' + i, spans: '1:' + this.colCount });
       const ht = this.row_ht[i];
       if (ht) {
         r.att('ht', ht);
         r.att('customHeight', '1');
       }
 
-      for (let j = 1; j <= this.cols; j++) {
+      for (let j = 1; j <= this.colCount; j++) {
         const ix = this.data[i][j];
         const sid = this.style_id(j, i);
         if ((ix.v !== null && ix.v !== undefined) || sid !== 1) {

@@ -6,7 +6,7 @@ import { ContentTypes } from '../lib/ContentTypes';
 import { Image } from '../lib/Image';
 import { SharedStrings } from '../lib/SharedStrings';
 import { Style } from '../lib/Style';
-import { Media } from '../types';
+import { errorHandler, Media, WorkBookSaveOption } from '../types';
 import { DocPropsApp } from '../util/DocPropsApp';
 import { XlDrawingRels } from '../util/XlDrawingRels';
 import { XlWorkbook } from '../util/XlWorkbook';
@@ -22,34 +22,27 @@ export class Workbook {
   sheets: Sheet[] = [];
   medias: Media[] = [];
 
-  // TODO Type
   /** @ss = new SharedStrings */
   sharedStrings: SharedStrings;
 
-  // TODO Type
   /** @cc: new ContentTypes(@) */
   contentType: ContentTypes;
 
-  // TODO Type
   /** @da = new DocPropsApp(@) */
   docPropsApp: DocPropsApp;
 
-  // TODO Type
   /** @wb = new XlWorkbook(@) */
   XlWorkbook: XlWorkbook;
 
-  // TODO Type
   /** @wbre = new XlWorkbookRels(@) */
   XlWorkbookRels: XlWorkbookRels;
 
-  // TODO Type
   /** @st = new Style(@) */
   style: Style;
 
   /** @cc = new CalcChain(@) */
   calcChain: CalcChain;
 
-  // TODO Type
   /** @wsre = new XlSheetRels(@) */
   // XlSheetRels: XlWorksheetRels;
 
@@ -108,10 +101,14 @@ export class Workbook {
   }
 
   // declare
-  save(cb: Function): void;
-  save(target: string, cb: Function): void;
-  save(target: string, opts: any, cb: Function): void;
-  save(target: string | Function, opts: any = {}, cb?: Function) {
+  save(cb: errorHandler): void;
+  save(target: string, cb: errorHandler): void;
+  save(target: string, opts: WorkBookSaveOption, cb: errorHandler): void;
+  save(
+    target: string | errorHandler,
+    opts?: WorkBookSaveOption | errorHandler,
+    cb?: errorHandler,
+  ) {
     if (typeof target === 'function' && !opts && !cb) {
       cb = target;
       target = `${this.filePath}/${this.fileName}`;
@@ -121,22 +118,25 @@ export class Workbook {
       cb = opts;
       opts = {};
     }
-    this._save(target as string, opts, cb!);
+    this._save(target as string, opts as WorkBookSaveOption, cb!);
   }
 
-  // private for save()
-  private _save(target: string, opts: any = {}, cb: Function) {
-    this.generate((err: Error, zip: any) => {
-      let buffer;
+  private _save(
+    target: string,
+    opts: WorkBookSaveOption = {},
+    cb: errorHandler,
+  ) {
+    this.generate((err: Error, zip: JSZip) => {
+      // let buffer;
       let args = { type: 'nodebuffer' } as {
         type: 'nodebuffer';
-        compressed?: 'DEFLATE';
-      };
+      } & WorkBookSaveOption;
       if (opts.compressed) {
         args.compressed = 'DEFLATE';
       }
 
-      buffer = zip.generateAsync(args).then((buffer: any) => {
+      // const buffer =
+      zip.generateAsync(args).then((buffer: any) => {
         if (err) return cb(err);
         writeFile(target, buffer, (err) => cb(err));
       });

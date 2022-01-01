@@ -39,7 +39,8 @@ export type FontDef = {
 export type FontID = number;
 
 export type Fill = {
-  /** 'none' */
+  /** patternFill
+   * - default: 'none' */
   type: string;
   /** '-' */
   bgColor: string;
@@ -69,4 +70,10 @@ export type StyleDef = {
   fill_id: number;
   bder_id: number;
   numfmt_id: number;
+};
+
+export type errorHandler = (err?: Error | NodeJS.ErrnoException | null) => void;
+
+export type WorkBookSaveOption = {
+  compressed?: 'DEFLATE';
 };
