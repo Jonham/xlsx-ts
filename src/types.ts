@@ -1,3 +1,5 @@
+import { Image } from "./lib/Image";
+
 export type _Image = MediaImage & {
   id: string;
   extension: string;
@@ -5,7 +7,7 @@ export type _Image = MediaImage & {
   toDrawingXml: (relId: string, image: _Image) => any;
 };
 export type _Media = {
-  image: _Image;
+  image: Image;
 };
 
 export type _dwRel = {

@@ -1,6 +1,7 @@
 import { writeFile } from 'fs'
 import JSZip from 'jszip'
 import { baseXl } from '../const/baseXl'
+import { Image } from '../lib/Image'
 import { _Image, _Media } from '../types'
 import { XlDrawingRels } from '../util/XlDrawingRels'
 import { XlWorksheetRels } from '../util/XlWorksheetRels'
@@ -69,7 +70,7 @@ export class Workbook {
     return sheet
   }
 
-  _addMediaFromImage(image: _Image) {
+  _addMediaFromImage(image: Image) {
     // converts image into proper media data structure
     this.medias.push({ image })
   }
