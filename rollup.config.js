@@ -40,7 +40,7 @@ export default [
       // babel(),
     ],
     output: [
-      { file: pkg.main, format: 'cjs' },
+      { file: pkg.cjs, format: 'cjs' },
       { file: pkg.esModule, format: 'es' },
     ],
   },
