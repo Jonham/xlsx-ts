@@ -51,6 +51,16 @@ export class Sheet {
   range?: _range;
   // TODO
   worksheet?: TODO;
+  // TODO
+  autofilter?: TODO;
+  _repeatRows?: {
+    start: number
+    end: number
+  }
+  _repeatCols?: {
+    start: number
+    end: number
+  }
 
   constructor(
     book: Workbook,
@@ -302,9 +312,9 @@ export class Sheet {
   //   id = @book.st.style2id(style)
   //   return  id
 
-  // getRange: () ->
-  //   return '$A$1:$' + tool.i2a(@cols) + '$' + @rows
-
+  getRange () {
+    // return '$A$1:$' + tool.i2a(this.cols) + '$' + this.rows
+  }
 
   // TODO
   toxml(): string {
