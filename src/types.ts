@@ -1,4 +1,4 @@
-import { Image } from "./lib/Image";
+import { Image } from './lib/Image';
 
 export type _Image = MediaImage & {
   id: string;
@@ -38,7 +38,7 @@ export type _Font = {
 
 export type _FONT_ID = number;
 
-export type _Fill = {
+export type Fill = {
   /** 'none' */
   type: string;
   /** '-' */

@@ -1,5 +1,5 @@
 import xmlbuilder from 'xmlbuilder';
-import { _Fill, _Font, _FONT_ID, _Border, _Style } from '../../types';
+import { Fill, _Font, _FONT_ID, _Border, _Style } from '../../types';
 import { Workbook } from '../../workbook';
 import { numberFormats } from './numberFormats';
 
@@ -11,7 +11,7 @@ export class Style {
   // font.toString cache
   cache: Record<string, _FONT_ID>;
   mfonts: _Font[];
-  mfills: _Fill[];
+  mfills: Fill[];
   mbders: _Border[];
   mstyle: _Style[];
   numFmtNextId: number;
@@ -56,24 +56,24 @@ export class Style {
     });
   }
 
-  private with_default() {
-    this.def_font_id = this.font2id();
-    this.def_fill_id = this.fill2id();
-    this.def_bder_id = this.bder2id();
-    this.def_align = '-';
-    this.def_valign = '-';
-    this.def_rotate = '-';
-    this.def_wrap = '-';
-    this.def_numfmt_id = 0;
-    this.def_style_id = this.style2id({
-      font_id: this.def_font_id,
-      fill_id: this.def_fill_id,
-      bder_id: this.def_bder_id,
-      align: this.def_align,
-      valign: this.def_valign,
-      rotate: this.def_rotate,
-    });
-  }
+  // private with_default() {
+  //   this.def_font_id = this.font2id();
+  //   this.def_fill_id = this.fill2id();
+  //   this.def_bder_id = this.bder2id();
+  //   this.def_align = '-';
+  //   this.def_valign = '-';
+  //   this.def_rotate = '-';
+  //   this.def_wrap = '-';
+  //   this.def_numfmt_id = 0;
+  //   this.def_style_id = this.style2id({
+  //     font_id: this.def_font_id,
+  //     fill_id: this.def_fill_id,
+  //     bder_id: this.def_bder_id,
+  //     align: this.def_align,
+  //     valign: this.def_valign,
+  //     rotate: this.def_rotate,
+  //   });
+  // }
 
   font2id(font: Partial<_Font> = {}) {
     // Default
@@ -118,15 +118,12 @@ export class Style {
     }
   }
 
-  fill2id(fill: Partial<_Fill> = {}) {
-    const defaultFill: Partial<_Fill> = {
+  fill2id(_fill: Partial<Fill> = {}) {
+    const fill: Fill = {
       type: 'none',
       bgColor: '-',
       fgColor: '-',
-    };
-    fill = {
-      ...defaultFill,
-      ...fill,
+      ..._fill,
     };
 
     const str = 'fill_' + fill.type + fill.bgColor + fill.fgColor;
@@ -134,7 +131,7 @@ export class Style {
     if (id) {
       return id;
     } else {
-      this.mfills.push(fill as _Fill);
+      this.mfills.push(fill);
       this.cache[str] = this.mfills.length;
       return this.mfills.length;
     }
