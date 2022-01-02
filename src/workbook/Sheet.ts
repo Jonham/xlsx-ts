@@ -2,14 +2,25 @@ import xmlbuilder from 'xmlbuilder';
 import { Workbook } from '.';
 import { Anchor, AnchorRange } from '../lib/Anchor';
 import { Image } from '../lib/Image';
-import { Border, Fill, FontDef, StyleDef, TODO } from '../types';
+import {
+  Border,
+  enumStyleHorizontalAlignmentValue,
+  enumStyleVerticalAlignmentValue,
+  Fill,
+  FontDef,
+  StyleDef,
+  TODO,
+} from '../types';
 import { colCache, _Unknown } from '../util/colCache';
 import { i2a } from '../util/i2a';
 import { JSDateToExcel } from '../util/JSDateToExcel';
 import { getDefaultPageMargin, PageMargin } from '../util/pageMargin';
 
-type ColWd = {
+/** 列宽对象 */
+type ColWidth = {
+  /** colName like: "A" */
   c: string;
+  /** Column Width */
   cw: number;
 };
 
@@ -253,10 +264,11 @@ export class Sheet {
     this.merges.push({ from: from_cell, to: to_cell });
   }
 
-  col_wd: ColWd[] = [];
+  col_wd: ColWidth[] = [];
   row_ht: number[] = [];
 
-  width(col: number, wd: number) {
+  /** set column width */
+  width(col: string, wd: number) {
     return this.col_wd.push({ c: col, cw: wd });
   }
 
@@ -291,13 +303,20 @@ export class Sheet {
       this.book.style.numfmt2id(numfmt_s);
   }
 
-  // TODO
-  align(col: number, row: number, align_s: any) {
-    return (this.styles['algn_' + col + '_' + row] = align_s);
+  align(
+    col: number,
+    row: number,
+    alignValue: enumStyleHorizontalAlignmentValue,
+  ) {
+    return (this.styles['algn_' + col + '_' + row] = alignValue);
   }
-  // TODO
-  valign(col: number, row: number, valign_s: any) {
-    return (this.styles['valgn_' + col + '_' + row] = valign_s);
+
+  valign(
+    col: number,
+    row: number,
+    valignValue: enumStyleVerticalAlignmentValue,
+  ) {
+    return (this.styles['valgn_' + col + '_' + row] = valignValue);
   }
   // TODO
   rotate(col: number, row: number, textRotation: any) {

@@ -64,9 +64,18 @@ export type Border = {
   bottom: BorderStyle;
 };
 
+export type enumStyleHorizontalAlignmentValue =
+  | 'left'
+  | 'center'
+  | 'right'
+  | '-';
+export type enumStyleVerticalAlignmentValue = 'bottom' | 'center' | 'top' | '-';
+
 export type StyleDef = {
-  align: string;
-  valign: string;
+  /** text horizontal alignment */
+  align: enumStyleHorizontalAlignmentValue;
+  /** Vertical Alignment: ?? center or middle */
+  valign: enumStyleVerticalAlignmentValue;
   rotate: string;
   wrap: string;
   font_id: number;

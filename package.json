@@ -6,7 +6,7 @@
   "esModule": "dist/xlsx-ts.esm.js",
   "browser": "dist/xlsx-ts.umd.js",
   "types": "dist/src/main.d.ts",
-  "module": "ES2020",
+  "type": "module",
   "dependencies": {
     "jszip": "^3.7.1",
     "xmlbuilder": "^15.1.1"

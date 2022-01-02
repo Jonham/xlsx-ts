@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { resolve } from 'path';
+// import { xlsx } from '../dist/xlsx-ts.esm';
 import { xlsx } from '../src/index';
 import { CHAR_CHECK, __dirname } from './consts';
 
@@ -45,7 +46,7 @@ function test(): void {
   //   null, // column 2 "B"
   //   [null, 'C1'], // column 3 "C"
   // ]);
-  sheet.width(1, 30);
+  sheet.width('A', 30);
   sheet.height(1, 20);
 
   // sheet.colBreaks([15, 30, 45]);
