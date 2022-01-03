@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test XLSX-TS Browser Export</title>
+</head>
+
+<body>
+  <h3>Click Button to Export test xlsx file</h3>
+  <button>Export</button>
+
+
+  <!-- alias -->
+  <script src="./test/browser/xmlbuilder.js"></script>
+  <script src="https://unpkg.com/jszip@3.7.1/dist/jszip.min.js"></script>
+  <script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.js"></script>
+  <!-- import xlsx-ts -->
+  <script src="./test/browser/xlsx-ts.js"></script>
+  <script src="./test/browser/app.js"></script>
+  <script>
+    const btn = document.querySelector('button')
+    btn.addEventListener('click', runExport)
+
+    const str = `<script src="./test/browser/xmlbuilder.js" />
+<script src="https://unpkg.com/jszip@3.7.1/dist/jszip.min.js" />
+<script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.js" />
+<!-- import xlsx-ts -->
+<script src="./test/browser/xlsx-ts.js" />
+// <script src="./test/browser/app.js"/>
+// content
+function runExport() {
+  console.log('runExport');
+
+  const { xlsx } = XLSXts;
+  const workbook = xlsx.createWorkbook('', 'output.xlsx');
+  const sheetName = 'test';
+  const sheet = workbook.createSheet(sheetName, 10, 10);
+  const colName = '_ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  for (let row = 1; row <= 10; row++) {
+    for (let col = 1; col <= 10; col++) {
+      const v = \`\${colName[col]}-\${row}\`;
+      sheet.set(col, row, v);
+
+      if (row === 1) {
+        sheet.set(col, row, {
+          set: 'Red',
+          font: {
+            name: '宋体',
+            sz: 11,
+            color: 'FF0022FF',
+            bold: true,
+            iter: true,
+            underline: true,
+          },
+          align: 'center',
+          fill: {
+            type: 'solid',
+            fgColor: 'FFFF2200',
+          },
+        });
+      }
+    }
+  }
+
+  workbook.generate((err, zip) => {
+    // let buffer;
+    let args = { type: 'blob', mimeType: 'application/vnd.ms-excel;' };
+    args.compressed = 'DEFLATE';
+
+    zip.generateAsync(args).then((blob) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+
+      const filename = 'test.xlsx';
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  });
+}
+
+`
+  </script>
+
+  <hr>
+  <h3>Code:</h3>
+  <pre>
+    code
+  </pre>
+
+  <script>
+    document.querySelector('pre').textContent = str
+  </script>
+</body>
+
+</html>
