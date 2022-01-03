@@ -423,8 +423,8 @@ export class Sheet {
       bder_id: this.styles['bder' + inx] as number,
 
       // TODO
-      align: this.styles['algn' + inx] as string,
-      valign: this.styles['valgn' + inx] as string,
+      align: this.styles['algn' + inx] as enumStyleHorizontalAlignmentValue,
+      valign: this.styles['valgn' + inx] as enumStyleVerticalAlignmentValue,
       rotate: this.styles['rotate' + inx] as string,
       wrap: this.styles['wrap' + inx] as string,
     };

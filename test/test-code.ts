@@ -2,13 +2,13 @@ import assert from 'assert';
 import { resolve } from 'path';
 // import { xlsx } from '../dist/xlsx-ts.esm';
 import { xlsx } from '../src/index';
-import { CHAR_CHECK, __dirname } from './consts';
+import { CHAR_CHECK, __dirname } from './consts.mjs';
 
 // const outputFolder = resolve('./test', './test-dist');
 const outputFolder = resolve(__dirname, './test-dist');
-const parseRoot = (f: string) => resolve(outputFolder, f);
+const parseRoot = (f) => resolve(outputFolder, f);
 
-function test(): void {
+function test() {
   const workbook = xlsx.createWorkbook(outputFolder, 'output.xlsx');
   const sheetName = 'test';
   const sheet = workbook.createSheet(sheetName, 10, 10);

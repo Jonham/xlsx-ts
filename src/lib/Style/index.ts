@@ -1,5 +1,13 @@
 import xmlbuilder from 'xmlbuilder';
-import { Fill, FontDef, FontID, Border, StyleDef } from '../../types';
+import {
+  Fill,
+  FontDef,
+  FontID,
+  Border,
+  StyleDef,
+  enumStyleHorizontalAlignmentValue,
+  enumStyleVerticalAlignmentValue,
+} from '../../types';
 import { Workbook } from '../../workbook';
 import { numberFormats } from './numberFormats';
 
@@ -19,8 +27,8 @@ export class Style {
   def_font_id: number;
   def_fill_id: number;
   def_bder_id: number;
-  def_align: string;
-  def_valign: string;
+  def_align: enumStyleHorizontalAlignmentValue;
+  def_valign: enumStyleVerticalAlignmentValue;
   def_rotate: string;
   def_wrap: string;
   def_numfmt_id: number;

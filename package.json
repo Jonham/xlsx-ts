@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "main": "src/index.ts",
   "cjs": "dist/xlsx-ts.cjs.js",
-  "esModule": "dist/xlsx-ts.esm.js",
-  "browser": "dist/xlsx-ts.umd.js",
+  "esModule": "dist/xlsx-ts.esm.mjs",
+  "browser": "dist/xlsx-ts",
   "types": "dist/src/main.d.ts",
-  "type": "module",
   "dependencies": {
     "jszip": "^3.7.1",
     "xmlbuilder": "^15.1.1"
@@ -22,6 +21,7 @@
     "rollup": "^2.61.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.31.1",
     "ts-node": "^10.4.0",
     "tslib": "^2.3.1",
@@ -30,9 +30,9 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "test": "ts-node test/test.ts",
-    "test:realtime": "nodemon --watch './test/**/*.ts' --exec 'node --experimental-specifier-resolution=node --loader ts-node/esm' test/test.ts",
-    "pretest": "npm run build"
+    "test": "node test/test.mjs",
+    "test:realtime": "nodemon --watch './test/**/*.*,./src/**/*.*' --exec 'node --experimental-specifier-resolution=node' test/test.mjs",
+    "pretest-": "npm run build"
   },
   "files": [
     "dist"

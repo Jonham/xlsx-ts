@@ -1,6 +1,7 @@
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';
+import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
 // CommonJS (for Node) and ES module (for bundlers) build.
@@ -13,19 +14,29 @@ export default [
   // browser-friendly UMD build
   {
     input: 'src/index.ts',
-    output: {
-      name: 'xlsx-ts',
-      file: pkg.browser,
-      format: 'umd',
-    },
+    output: [
+      {
+        name: 'XLSXts',
+        file: pkg.browser + '.js',
+        format: 'umd',
+      },
+      {
+        name: 'XLSXts',
+        file: pkg.browser + '.min.js',
+        format: 'umd',
+        plugins: [terser()],
+      },
+    ],
     external: ['xmlbuilder', 'fs', 'jszip'],
     plugins: [
-      resolve(), // so Rollup can find external
-      commonjs(), // so Rollup can convert external to an ES module
+      resolve({
+        browser: true,
+      }), // so Rollup can find external
+      commonjs({}), // so Rollup can convert external to an ES module
       typescript({
         rollupCommonJSResolveHack: false,
         clean: true,
-      }), // so Rollup can convert TypeScript to JavaScript
+      }),
     ],
   },
   {
